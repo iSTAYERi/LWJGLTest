@@ -44,9 +44,11 @@ class HelloWorld {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
 
         window = glfwCreateWindow(600, 400, "Hello World!", NULL, NULL)
-        if (window == NULL)
+        if (window == NULL){
             glfwTerminate()
             throw RuntimeException("Failed to create the GLFW window")
+        }
+
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window) { window, key, scancode, action, mods ->
