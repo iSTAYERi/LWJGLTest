@@ -10,25 +10,23 @@ import org.lwjgl.system.MemoryUtil.NULL
 
 class HelloWorld {
 
-    private var window: Long = 0
-
     companion object {
+
+        const val SLEEP_TIME_FPS = 1000L/60L
+
         @JvmStatic fun main(args: Array<String>){
             HelloWorld().run()
         }
     }
+
+    private var window: Long = 0
 
     fun run() {
         System.out.println("Hello LWJGL ${Version.getVersion()} !")
 
         init()
         loop()
-
-        glfwFreeCallbacks(window)
-        glfwDestroyWindow(window)
-
-        glfwTerminate()
-        glfwSetErrorCallback(null).free()
+        dispose()
     }
 
     private fun init() {
@@ -95,7 +93,16 @@ class HelloWorld {
             glfwSwapBuffers(window) // swap the color buffers
 
             glfwPollEvents()
+
+            Thread.sleep(SLEEP_TIME_FPS)
         }
     }
 
+    fun dispose(){
+        glfwFreeCallbacks(window)
+        glfwDestroyWindow(window)
+
+        glfwTerminate()
+        glfwSetErrorCallback(null).free()
+    }
 }
