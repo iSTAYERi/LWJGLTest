@@ -8,8 +8,6 @@ import org.lwjgl.opengl.GL11.GL_FALSE
 import org.lwjgl.opengl.GL11.GL_TRUE
 import org.lwjgl.opengl.GL11.glClearColor
 import org.lwjgl.system.MemoryUtil.NULL
-import javax.swing.Spring.height
-import javax.swing.Spring.width
 import org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback
 
 
