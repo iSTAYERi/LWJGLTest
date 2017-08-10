@@ -9,7 +9,8 @@ import org.lwjgl.opengl.GL11.GL_TRUE
 import org.lwjgl.opengl.GL11.glClearColor
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback
-
+import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GLCapabilities
 
 
 class Window (var title: String, var width: Int, var height: Int, var vSync: Boolean) {
@@ -27,6 +28,8 @@ class Window (var title: String, var width: Int, var height: Int, var vSync: Boo
         glfwDefaultWindowHints()
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE)
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE)
+
+//        Включение последней версии OpenGL
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2)
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
@@ -65,6 +68,10 @@ class Window (var title: String, var width: Int, var height: Int, var vSync: Boo
         glfwShowWindow(windowHandle)
 
         GL.createCapabilities()
+
+//        Вывод версии OpenGL
+        val glVersion = GL11.glGetString(GL11.GL_VERSION)
+        print("OpenGL Version: $glVersion")
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
     }

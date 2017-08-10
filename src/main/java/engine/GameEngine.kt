@@ -1,14 +1,98 @@
 package engine
 
-class GameEngine(windowTitle: String,
-                 width: Int,
-                 height: Int,
-                 vSync: Boolean,
-                 var gameLogic: IGameLogic) : Runnable {
+
+class GameEngine @Throws(Exception::class) constructor(
+        windowTitle: String,
+        width: Int,
+        height: Int,
+        vSync: Boolean,
+        var gameLogic: IGameLogic): Runnable{
+
+    companion object {
+        const val TARGET_FPS = 60
+        const val TARGET_UPS = 30
+    }
 
     var gameLoopThread = Thread(this, "GAME_LOOP_THREAD")
     var window = Window(windowTitle, width, height, vSync)
-//    Must to create class Timer
     var timer = Timer()
+
+    fun start() {
+//        var osName = System.getProperty("os.name")
+//        if (osName.contains("Mac")) {
+//            gameLoopThread.run()
+//        } else {
+//            gameLoopThread.start()
+//        }
+        gameLoopThread.start()
+    }
+
+    override fun run() {
+        try {
+            init()
+            gameLoop()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    @Throws(Exception::class)
+    protected fun init() {
+        window.init()
+        timer.init()
+        gameLogic.init()
+    }
+
+    protected fun gameLoop() {
+        var elapsedTime: Float
+        var accumulator = 0f
+        var interval = 1f / TARGET_UPS
+
+        var running = true
+        while (running && !window.windowShouldClose()) {
+            elapsedTime = timer.getElapsedTime()
+            accumulator += elapsedTime
+
+            input()
+
+            while (accumulator >= interval) {
+                update(interval)
+                accumulator -= interval
+            }
+
+            render()
+
+            if (!window.vSync){
+                sync()
+            }
+        }
+
+    }
+
+//    Если отключена вертикальная синхронизация
+    fun sync() {
+        var loopSlop = 1f / TARGET_FPS
+        var endTime = timer.lastLoopTime + loopSlop
+        while (timer.getTime() < endTime) {
+            try {
+                Thread.sleep(1)
+            }catch (ie: InterruptedException){
+
+            }
+        }
+    }
+
+    fun input() {
+        gameLogic.input(window)
+    }
+
+    fun update(interval: Float) {
+        gameLogic.update(interval)
+    }
+
+    fun render() {
+        gameLogic.render(window)
+        window.update()
+    }
 }
 
