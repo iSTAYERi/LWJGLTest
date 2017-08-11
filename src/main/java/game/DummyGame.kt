@@ -35,12 +35,11 @@ class DummyGame: IGameLogic {
     }
 
     override fun render(window: Window) {
-        if (window.resized) {
-            GL11.glViewport(0, 0, window.width, window.height)
-            window.resized = false
-        }
-
         window.setClearColor(color, color, color, 0.0f)
-        renderer.clear()
+        renderer.render()
+    }
+
+    override fun cleanup() {
+        renderer.cleanup()
     }
 }
