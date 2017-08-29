@@ -33,6 +33,8 @@ class GameEngine @Throws(Exception::class) constructor(
             gameLoop()
         } catch (e: Exception) {
             e.printStackTrace()
+        } finally {
+            cleanup()
         }
     }
 
@@ -67,6 +69,10 @@ class GameEngine @Throws(Exception::class) constructor(
             }
         }
 
+    }
+
+    fun cleanup() {
+        gameLogic.cleanup()
     }
 
 //    Если отключена вертикальная синхронизация

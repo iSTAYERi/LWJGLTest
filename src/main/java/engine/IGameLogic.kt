@@ -11,4 +11,6 @@ interface IGameLogic {
 
     fun render(window: Window)
 
+    fun cleanup()
+
 }
