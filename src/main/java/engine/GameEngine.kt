@@ -42,7 +42,7 @@ class GameEngine @Throws(Exception::class) constructor(
     protected fun init() {
         window.init()
         timer.init()
-        gameLogic.init()
+        gameLogic.init(window)
     }
 
     protected fun gameLoop() {

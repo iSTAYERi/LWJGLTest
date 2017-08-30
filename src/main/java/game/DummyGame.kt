@@ -3,6 +3,7 @@ package game
 import engine.IGameLogic
 import engine.Window
 import engine.graph.Mesh
+import game.draws.FVC
 import org.lwjgl.glfw.GLFW
 
 class DummyGame: IGameLogic {
@@ -13,26 +14,15 @@ class DummyGame: IGameLogic {
     var mesh: Mesh? = null
 
     @Throws(Exception::class)
-    override fun init() {
+    override fun init(window: Window) {
 
-        renderer.init()
+        renderer.init(window)
 
-        var positions: FloatArray = floatArrayOf(
-                -0.5f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f
-        )
-
-        var indices = intArrayOf(0, 1, 3, 3, 1, 2)
-
-        var colours = floatArrayOf(
-                0.5f, 0.0f, 0.0f,
-                0.0f,0.5f, 0.0f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.5f
-        )
-        mesh = Mesh(positions, colours, indices)
+        var fvc = FVC()
+        var positions = fvc.positions
+        var indices = fvc.indices
+        var colours = fvc.colours
+        mesh = fvc.mesh
     }
 
     override fun input(window: Window) {

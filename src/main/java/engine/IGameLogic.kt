@@ -3,7 +3,7 @@ package engine
 interface IGameLogic {
 
     @Throws(Exception::class)
-    fun init()
+    fun init(window: Window)
 
     fun input(window: Window)
 

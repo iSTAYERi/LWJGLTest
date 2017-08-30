@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GLCapabilities
 
 
-class Window (var title: String, var width: Int, var height: Int, var vSync: Boolean) {
+class Window (private var title: String, var width: Int, var height: Int, var vSync: Boolean) {
 
     var resized = false
     var windowHandle: Long = NULL

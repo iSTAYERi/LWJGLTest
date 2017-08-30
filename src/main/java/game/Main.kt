@@ -8,7 +8,7 @@ fun main(args: Array<String>) {
     try {
         var vSync = true
         var gameLogic: IGameLogic = DummyGame()
-        var gameEng = GameEngine("Not a Game", 800, 600, vSync, gameLogic)
+        var gameEng = GameEngine("Not a Game", 600, 480, vSync, gameLogic)
         gameEng.start()
     } catch (ex: Exception) {
         ex.printStackTrace()
