@@ -2,7 +2,7 @@ package game.draws
 
 import engine.graph.Mesh
 
-class FVC {
+class FVCMesh{
 
     var mesh: Mesh
     var positions: FloatArray

@@ -1,54 +1,80 @@
 package game
 
 import engine.IGameLogic
+import engine.Item
 import engine.Window
-import engine.graph.Mesh
-import game.draws.FVC
-import org.lwjgl.glfw.GLFW
+import game.draws.FVCMesh
+import org.lwjgl.glfw.GLFW.*
 
 class DummyGame: IGameLogic {
 
-    var direction = 0
-    var color = 0.0f
+    var dispXInc = 0
+    var dispYInc = 0
+    var dispZInc = 0
+    var scaleInc = 0
     var renderer: Renderer = Renderer()
-    var mesh: Mesh? = null
+    var fvcMesh: FVCMesh? = null
+    var items: Array<Item>? = null
 
     @Throws(Exception::class)
     override fun init(window: Window) {
 
         renderer.init(window)
 
-        var fvc = FVC()
-        var positions = fvc.positions
-        var indices = fvc.indices
-        var colours = fvc.colours
-        mesh = fvc.mesh
+        fvcMesh = FVCMesh()
+        var fvc = Item(fvcMesh!!.mesh)
+        items = arrayOf(fvc)
     }
 
     override fun input(window: Window) {
-        direction = when {
-            window.isKeyPressed(GLFW.GLFW_KEY_UP) -> 1
-            window.isKeyPressed(GLFW.GLFW_KEY_DOWN) -> -1
-            else -> 0
+        dispXInc = 0
+        dispYInc = 0
+        dispZInc = 0
+        scaleInc = 0
+        when {
+            window.isKeyPressed(GLFW_KEY_UP) -> dispYInc = 1
+            window.isKeyPressed(GLFW_KEY_DOWN) -> dispYInc = -1
+            window.isKeyPressed(GLFW_KEY_RIGHT) -> dispXInc = 1
+            window.isKeyPressed(GLFW_KEY_LEFT) -> dispXInc = -1
+            window.isKeyPressed(GLFW_KEY_Q) -> dispZInc = 1
+            window.isKeyPressed(GLFW_KEY_A) -> dispZInc = -1
+            window.isKeyPressed(GLFW_KEY_PAGE_UP) -> scaleInc = 1
+            window.isKeyPressed(GLFW_KEY_PAGE_DOWN) -> scaleInc = -1
         }
     }
 
     override fun update(interval: Float) {
-        color += direction * 0.02f
-        if (color > 1) {
-            color = 1.0f
-        } else if (color < 0) {
-            color = 0.0f
+        for (item: Item in items!!) {
+            //Update position
+            var itemPos = item.position
+            var posX = itemPos.x + dispXInc * 0.02f
+            var posY = itemPos.y + dispYInc * 0.02f
+            var posZ = itemPos.z + dispZInc * 0.02f
+            item.setPosition(posX, posY, posZ)
+
+            //Update scale
+            var scale: Float = item.scale
+            scale += scaleInc * 0.05f
+            if (scale < 0f) {
+                scale = 0f
+            }
+            item.scale = scale
+
+            //Update rotation angle
+            var rotationZ: Float = item.rotation.z + 1.5f
+            if (rotationZ > 360) {
+                rotationZ = 0f
+            }
+            item.rotation.z = rotationZ
         }
     }
 
     override fun render(window: Window) {
-        window.setClearColor(color, color, color, 0.0f)
-        renderer.render(window, mesh!!)
+        renderer.render(window, items!!)
     }
 
     override fun cleanup() {
         renderer.cleanup()
-        mesh!!.cleanup()
+        fvcMesh!!.mesh.cleanup()
     }
 }

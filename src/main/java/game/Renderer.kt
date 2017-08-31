@@ -1,9 +1,11 @@
 package game
 
+import engine.Item
 import engine.Utils
 import engine.Window
 import engine.graph.Mesh
 import engine.graph.ShaderProgram
+import engine.graph.Transformation
 import org.joml.Matrix4f
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL20.*
@@ -22,6 +24,8 @@ class Renderer {
 
     private var projectionMatrix: Matrix4f? = null
 
+    var transformation: Transformation = Transformation()
+
     @Throws(Exception::class)
     fun init(window: Window) {
 
@@ -31,11 +35,11 @@ class Renderer {
         shaderProgram!!.createFragmentShader(Utils.loadResource("/fragment.glsl"))
         shaderProgram!!.link()
 
-        // Create projection matrix
-        var aspectRatio = window.width.toFloat() / window.height.toFloat()
-        println(aspectRatio)
-        projectionMatrix = Matrix4f().perspective(fov, aspectRatio, zNear, zFar)
+        // Create uniforms for matrices
         shaderProgram!!.createUniform("projectionMatrix")
+        shaderProgram!!.createUniform("worldMatrix")
+
+        window.setClearColor(0.0f, 0.0f, 0.0f, 0.0f)
 
     }
 
@@ -43,7 +47,7 @@ class Renderer {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
     }
 
-    fun render(window: Window, mesh: Mesh) {
+    fun render(window: Window, items: Array<Item>) {
         clear()
 
         if (window.resized) {
@@ -53,20 +57,24 @@ class Renderer {
 
         shaderProgram!!.bind()
 
-        // Set the uniform with our proj matrix (for rotating, scaling, etc..)
-        shaderProgram!!.setUniform("projectionMatrix", projectionMatrix!!)
+        //Update projection Matrix
+        var projMatrix = transformation.getProjectionMatrix(
+                fov,
+                window.width.toFloat(),
+                window.height.toFloat(),
+                zNear,
+                zFar)
+        shaderProgram!!.setUniform("projectionMatrix", projMatrix)
 
-        // Bind VAO and draw the mesh
-        glBindVertexArray(mesh.vaoId)
-        glEnableVertexAttribArray(0)
-        glEnableVertexAttribArray(1)
-        glDrawElements(GL_TRIANGLES, mesh.vertexCount, GL_UNSIGNED_INT, 0)
-
-
-        // Restore state
-        glDisableVertexAttribArray(0)
-        glDisableVertexAttribArray(1)
-        glBindVertexArray(0)
+        //Render each Item
+        for (item: Item in items) {
+            var worldMatrix = transformation.getWorldMatrix(
+                    item.position,
+                    item.rotation,
+                    item.scale)
+            shaderProgram!!.setUniform("worldMatrix", worldMatrix)
+            item.mesh.render()
+        }
 
         shaderProgram!!.unbind()
     }

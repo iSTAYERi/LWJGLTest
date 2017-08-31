@@ -70,12 +70,27 @@ class Mesh (positions: FloatArray, colours: FloatArray, indices: IntArray){
         }
     }
 
+    fun render(){
+        // Bind VAO and draw the mesh
+        glBindVertexArray(vaoId)
+        glEnableVertexAttribArray(0)
+        glEnableVertexAttribArray(1)
+        glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0)
+
+
+        // Restore state
+        glDisableVertexAttribArray(0)
+        glDisableVertexAttribArray(1)
+        glBindVertexArray(0)
+    }
+
     fun cleanup() {
         glDisableVertexAttribArray(0)
 
         //Delete the VBO
         glBindBuffer(GL_ARRAY_BUFFER, 0)
         glDeleteBuffers(posVboId)
+        glDeleteBuffers(colourVboId)
         glDeleteBuffers(idxVboId)
 
         //Delete the VAO
