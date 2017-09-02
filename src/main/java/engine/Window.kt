@@ -4,12 +4,9 @@ import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.glfw.GLFWVidMode
 import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11.GL_FALSE
-import org.lwjgl.opengl.GL11.GL_TRUE
-import org.lwjgl.opengl.GL11.glClearColor
+import org.lwjgl.opengl.GL11.*
 import org.lwjgl.system.MemoryUtil.NULL
 import org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback
-import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GLCapabilities
 
 
@@ -70,10 +67,11 @@ class Window (private var title: String, var width: Int, var height: Int, var vS
         GL.createCapabilities()
 
 //        Вывод версии OpenGL
-        val glVersion = GL11.glGetString(GL11.GL_VERSION)
+        val glVersion = glGetString(GL_VERSION)
         print("OpenGL Version: $glVersion")
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
+        glEnable(GL_DEPTH_TEST)
     }
 
     fun setClearColor(r: Float, g: Float, b: Float, alpha: Float){

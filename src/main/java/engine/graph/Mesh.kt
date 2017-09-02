@@ -7,22 +7,15 @@ import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL30.*
 import org.lwjgl.system.MemoryUtil
 import java.nio.IntBuffer
-import org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER
-import org.lwjgl.opengl.GL15.glBindBuffer
-import org.lwjgl.opengl.GL20.glDisableVertexAttribArray
-import org.lwjgl.opengl.GL15.GL_STATIC_DRAW
-import org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER
-import org.lwjgl.opengl.GL11.GL_FLOAT
-
 
 
 class Mesh (positions: FloatArray, colours: FloatArray, indices: IntArray){
 
-    val vaoId: Int
+    private val vaoId: Int
     private val posVboId: Int
     private val colourVboId: Int
     private val idxVboId: Int
-    val vertexCount: Int
+    private val vertexCount: Int
 
     init {
         var posBuffer: FloatBuffer? = null
@@ -54,7 +47,7 @@ class Mesh (positions: FloatArray, colours: FloatArray, indices: IntArray){
             //Index VBO
             idxVboId = glGenBuffers()
             indicesBuffer = MemoryUtil.memAllocInt(indices.size)
-            indicesBuffer.put(indices).flip()
+            indicesBuffer!!.put(indices).flip()
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idxVboId)
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW)
 
@@ -63,8 +56,8 @@ class Mesh (positions: FloatArray, colours: FloatArray, indices: IntArray){
 
         }finally {
             when {
-                colourBuffer != null -> MemoryUtil.memFree(colourBuffer)
                 posBuffer != null -> MemoryUtil.memFree(posBuffer)
+                colourBuffer != null -> MemoryUtil.memFree(colourBuffer)
                 indicesBuffer != null -> MemoryUtil.memFree(indicesBuffer)
             }
         }

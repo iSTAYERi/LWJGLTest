@@ -5,17 +5,15 @@ import engine.Item
 import engine.Window
 import game.draws.FVCMesh
 import org.lwjgl.glfw.GLFW.*
-import com.sun.awt.SecurityWarning.setPosition
-import engine.graph.Mesh
 
-
-class DummyGame: IGameLogic {
+class ShadowGame: IGameLogic {
 
     var dispXInc = 0
     var dispYInc = 0
     var dispZInc = 0
     var scaleInc = 0
     var renderer: Renderer = Renderer()
+    var fvcMesh: FVCMesh? = null
     var items: Array<Item>? = null
 
     @Throws(Exception::class)
@@ -23,50 +21,17 @@ class DummyGame: IGameLogic {
 
         renderer.init(window)
 
-        val positions = floatArrayOf(
-                // VO
-                -0.5f,  0.5f,  0.5f,
-                // V1
-                -0.5f, -0.5f,  0.5f,
-                // V2
-                0.5f, -0.5f,  0.5f,
-                // V3
-                0.5f,  0.5f,  0.5f,
-                // V4
-                -0.5f,  0.5f, -0.5f,
-                // V5
-                0.5f,  0.5f, -0.5f,
-                // V6
-                -0.5f, -0.5f, -0.5f,
-                // V7
-                0.5f, -0.5f, -0.5f)
-        val colours = floatArrayOf(
-                0.5f, 0.0f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.5f,
-                0.5f, 0.0f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.5f)
-        val indices = intArrayOf(
-                // Front face
-                0, 1, 3, 3, 1, 2,
-                // Top Face
-                4, 0, 3, 5, 4, 3,
-                // Right face
-                3, 2, 7, 5, 3, 7,
-                // Left face
-                6, 1, 0, 6, 0, 4,
-                // Bottom face
-                2, 1, 6, 2, 6, 7,
-                // Back face
-                7, 6, 4, 7, 4, 5
-        )
-        val mesh = Mesh(positions, colours, indices)
-        val gameItem = Item(mesh)
-        gameItem.setPosition(0f, 0f, -2f)
-        items = arrayOf(gameItem)
+        fvcMesh = FVCMesh()
+        var fvc = Item(fvcMesh!!.mesh)
+        fvc.setPosition(-1F, 0F, -4F)
+        var fvc2 = Item(fvcMesh!!.mesh)
+        fvc2.setPosition(1F, 0F, -4F)
+        var fvc3 = Item(fvcMesh!!.mesh)
+        fvc3.setPosition(-1F, 0F, -8F)
+        var fvc4 = Item(fvcMesh!!.mesh)
+        fvc4.setPosition(1F, 0F, -8F)
+
+        items = arrayOf(fvc, fvc2, fvc3, fvc4)
     }
 
     override fun input(window: Window) {
@@ -108,7 +73,7 @@ class DummyGame: IGameLogic {
             if (rotation > 360) {
                 rotation = 0f
             }
-            item.setRotation(rotation, rotation, rotation)
+//            item.setRotation(rotation, rotation, rotation)
         }
     }
 

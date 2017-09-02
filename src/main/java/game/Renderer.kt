@@ -3,13 +3,10 @@ package game
 import engine.Item
 import engine.Utils
 import engine.Window
-import engine.graph.Mesh
 import engine.graph.ShaderProgram
 import engine.graph.Transformation
 import org.joml.Matrix4f
 import org.lwjgl.opengl.GL11.*
-import org.lwjgl.opengl.GL20.*
-import org.lwjgl.opengl.GL30.*
 
 
 class Renderer {
@@ -39,7 +36,7 @@ class Renderer {
         shaderProgram!!.createUniform("projectionMatrix")
         shaderProgram!!.createUniform("worldMatrix")
 
-        window.setClearColor(0.0f, 0.0f, 0.0f, 0.0f)
+        window.setClearColor(55/255f, 55/255f, 55/255f, 0.0f)
 
     }
 

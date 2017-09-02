@@ -9,7 +9,7 @@ class GameEngine @Throws(Exception::class) constructor(
         var gameLogic: IGameLogic): Runnable{
 
     companion object {
-        const val TARGET_FPS = 60
+        const val TARGET_FPS = 75
         const val TARGET_UPS = 30
     }
 

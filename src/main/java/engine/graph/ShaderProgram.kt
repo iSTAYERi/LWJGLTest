@@ -3,14 +3,12 @@ package engine.graph
 import org.joml.Matrix4f
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.system.MemoryStack
-import java.nio.FloatBuffer
-
 class ShaderProgram {
 
     private var programId: Int = 0
     private var vertexShaderId: Int = 0
     private var fragmentShaderId: Int = 0
-    private val uniforms: MutableMap<String, Int> = HashMap()
+    private var uniforms: MutableMap<String, Int>? = null
 
     init {
         init()
@@ -22,6 +20,7 @@ class ShaderProgram {
         if (programId == 0) {
             throw Exception("Could not create Shader")
         }
+        uniforms = HashMap()
     }
 
     @Throws(Exception::class)
@@ -30,18 +29,16 @@ class ShaderProgram {
         if (uniformLocation < 0) {
             throw Exception("Could not find uniform $uniformName")
         }
-        uniforms.put(uniformName, uniformLocation)
+        uniforms!!.put(uniformName, uniformLocation)
     }
 
     fun setUniform(uniformName: String, value: Matrix4f) {
-
-        // Dump the matrix into a float buffer
-        try {
-            var stack: MemoryStack = MemoryStack.stackPush()
-            var fb: FloatBuffer = stack.mallocFloat(16)
+        MemoryStack.stackPush().use { stack ->
+            // Dump the matrix into a float buffer
+            val fb = stack.mallocFloat(16)
             value.get(fb)
-            glUniformMatrix4fv(uniforms[uniformName]!!, false, fb)
-        } catch (e: Exception) {throw Exception("$e \nCould not set uniform")}
+            glUniformMatrix4fv(uniforms!![uniformName]!!, false, fb)
+        }
     }
 
     @Throws(Exception::class)
